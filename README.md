@@ -1,73 +1,109 @@
-# cluedle
+﻿# Cluedle
 
-**Less guessing, more solving.** A local, responsive Wordle companion built with React 19, TypeScript, Vite, Tailwind CSS v4, shadcn/ui (Base UI), and Lucide.
+**Less guessing, more solving.** Cluedle is a Wordle assistant built with React, TypeScript, Vite, and shadcn/ui. Enter your guesses and their feedback to find words that match your clues.
 
-## Run
+## How to run
 
-From this directory, with Node 22.12+ (Node 24 recommended) and npm:
+### Requirements
+
+- Node.js 22.12+ and npm.
+- A terminal opened in the project's root directory.
+
+### Start the app
+
+Install the dependencies:
 
 ```sh
 npm ci
+```
+
+Start the development server:
+
+```sh
 npm run dev
 ```
 
+Open the local URL printed in the terminal. Keep the terminal running while using the app; press **Ctrl+C** to stop the server.
+
 On Windows PowerShell, use `npm.cmd` instead of `npm` if script execution is disabled.
 
-Open the URL Vite prints. To check the project:
+### Preview a production build
+
+```sh
+npm run build
+npm run preview --workspace web
+```
+
+Open the preview URL printed in the terminal.
+
+## How to use Cluedle
+
+### 1. Enter a guess
+
+Type a five-letter word you have played in Wordle into the guess field. Cluedle accepts words from its local dictionary.
+
+### 2. Match the feedback
+
+Click each letter tile to cycle through **gray → yellow → green → gray**, matching the feedback Wordle gave you.
+
+| Color | Meaning |
+| --- | --- |
+| Gray — Absent | The letter is absent, or this guess contains an extra occurrence of it. |
+| Yellow — Present | The letter exists in the answer, but belongs in another position. |
+| Green — Correct | The letter is in the correct position. |
+
+For repeated letters, copy each tile's feedback exactly. A gray letter can also appear as yellow or green elsewhere in the same guess.
+
+### 3. Submit your guess
+
+Select **Add guess**, or press **Enter** while focused on the word field. Your guess moves into History, and Possible answers updates to match every submitted clue. Unsubmitted changes do not affect the results.
+
+### 4. Explore possible answers
+
+- Matching words from the historical Wordle answer list appear first, followed by other accepted words.
+- Within each group, words are ranked by common unique letters among the remaining candidates.
+- Select **Show more** to reveal another 24 results.
+- Use a word's copy button to copy it, try it in Wordle, then enter the new guess and feedback in Cluedle.
+
+An accepted guess is not necessarily a daily Wordle answer. The local dictionary is a historical snapshot, so suggestions are not guaranteed to include today's answer.
+
+### 5. Update or clear your guesses
+
+- **Change feedback:** Click a tile in History to update the results immediately.
+- **Edit:** Select Edit on a submitted guess, adjust the word or feedback, then select Save changes. Changing the word resets its draft feedback to gray.
+- **Cancel:** Discard edits and return to adding a new guess.
+- **Delete:** Use the trash button to remove a guess and recalculate the results.
+- **Reset all:** Clear the history and current draft after confirming.
+
+History is kept only for the current session and clears when you refresh the page.
+
+### Keyboard shortcuts
+
+| Key | Action |
+| --- | --- |
+| **1–5** | Cycle the corresponding letter's feedback while focused within the guess form. Requires a complete five-letter word; also works while editing. |
+| **Enter** in the word field | Add the guess or save changes. |
+| **Tab / Shift+Tab** | Move between controls. |
+| **Enter / Space** on a tile | Cycle that tile's feedback. |
+| **Escape** in a dialog | Close the dialog. |
+
+### If no words match
+
+Check the feedback for every submitted guess, especially repeated letters and yellow positions. Conflicting clues can eliminate all candidates. A word may also be missing from the local dictionary.
+
+## Development checks
+
+Run these commands from the project root:
 
 ```sh
 npm test
 npm run typecheck
 npm run lint
 npm run build
-npm run preview --workspace web
 ```
 
-## Use
+## Word list
 
-1. Enter a five-letter word played in Wordle.
-2. Tap each tile to cycle gray → yellow → green. While entering or editing a complete guess, press **1–5** to cycle the matching tile and Enter in the word field to submit. Text labels and icons also identify each state. Keyboard users can Tab between tiles and activate them with Space or Enter.
-3. Select **Add guess**. Draft feedback does not affect results.
-4. Change submitted tiles for immediate updates, or select **Edit** to change a word/feedback and save. Changing draft letters resets its feedback to gray.
-5. Delete individual guesses or confirm **Reset all** to start over. Copy candidate words with their copy buttons.
+Cluedle bundles 12,953 accepted guesses, including 2,315 historical answers. Dictionary lookups happen locally; no external word API is required.
 
-## Structure
-
-- `apps/web/src/App.tsx`: guess history, draft state, derived results, and page layout.
-- `apps/web/src/components/`: guess entry, tiles, history rows, candidate list, and dialog.
-- `apps/web/src/lib/wordle.ts`: pure two-pass evaluation, validation, and feedback cycling.
-- `apps/web/src/lib/filter.ts`: exact feedback simulation across the entire history.
-- `apps/web/src/lib/candidates.ts`: filters and ranks the full accepted-guess dictionary for suggestions.
-- `apps/web/src/lib/ranking.ts`: unique-letter frequency ranking with alphabetical ties.
-- `apps/web/src/lib/wordle.test.ts`: algorithm, validation, ranking, and dictionary tests.
-- `apps/web/src/data/`: static dictionaries, provenance, and retained MIT notice.
-- `apps/web/src/styles.css`: application theme overrides.
-- `packages/ui/`: existing shared shadcn/ui components and Tailwind setup.
-
-## Dictionary and limitations
-
-The full historical lists from [Josh Stephenson's Wordle-Solver](https://github.com/joshstephenson/Wordle-Solver) are bundled under its MIT license: **2,315 answers** and **12,953 allowed guesses**, including every answer. See [dictionary provenance](apps/web/src/data/README.md) and [license](apps/web/src/data/LICENSE.txt).
-
-These lists are not synchronized with today's NYT dictionary. Newer words may be missing; one remaining candidate is a match within this dataset, not a guarantee of today's answer. No dictionary requests occur during normal use.
-
-Suggestions show matching historical answers first, followed by other accepted words. Within each group, ranking counts how many remaining candidates contain each letter and sums those frequencies once per unique letter in each suggestion. This is a transparent heuristic, not entropy optimization or an optimal next-guess guarantee. Suggestions come from all 12,953 accepted guesses that match the feedback, including words outside the historical solution list.
-
-History is kept in React state and clears on refresh. No backend, accounts, external word API, analytics, or persistence. Clipboard access depends on browser permission and a secure context (HTTPS or localhost); failures display a manual-copy hint.
-
-## Implementation choices
-
-- Retained the existing npm workspaces/Turborepo structure and shared shadcn Button.
-- Used native modal dialogs for built-in focus containment, Escape handling, and focus restoration.
-- Candidates are derived with `useMemo`, never separately mutable state.
-- Results render in batches of 24 to keep the initial DOM small; all candidates remain available through **Show more**.
-- The light theme is intentional.
-- Vitest runs independently of React in a Node environment.
-
-## Verification
-
-- 46 Vitest tests pass, including the PSYCH regression, duplicate-letter cases, conflicting positions, excluded letters, full-list occurrence invariants, filtering, immutable inputs, malformed and sparse histories, feedback cycling, edit/removal recalculation, ranking, validation, and dictionary integrity.
-- TypeScript, workspace lint, and production build pass.
-- Headless Chrome checks cover draft isolation, validation, multiple guesses, feedback edits, deletion, clipboard success, reset confirmation, keyboard tile activation, dialog focus restoration, and pagination.
-- Viewports of 320, 390, 768, and 1440 pixels were checked for overflow and tile targets of at least 44 pixels.
-
-See [the clean-code audit](AUDIT.md) for the latest refactoring, file inventory, validation results, and verification limits. The browser and viewport checks above describe earlier verification; they were not rerun during this audit.
+See the [dictionary provenance](apps/web/src/data/README.md) and retained [MIT license](apps/web/src/data/LICENSE.txt) for source details.
