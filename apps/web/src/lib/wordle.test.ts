@@ -4,6 +4,7 @@ import allowedWords from "../data/guesses.json"
 import type { Feedback, Guess } from "../types/wordle"
 import {
   emptyFeedback,
+  reuseFeedback,
   cycleFeedback,
   evaluateGuess,
   isValidGuess,
@@ -68,6 +69,38 @@ describe("Wordle feedback", () => {
 })
 
 describe("feedback editing", () => {
+  it("reuses green and yellow clues at the same positions", () => {
+    expect(reuseFeedback("CRATE", [guess("crane", [C, P, A, A, A])]))
+      .toEqual([C, P, A, A, A])
+    expect(reuseFeedback("reach", [guess("crane", [C, P, A, A, A])]))
+      .toEqual([A, A, A, A, A])
+  })
+  it("preserves manual tags on unchanged letters and clears changed slots", () => {
+    expect(reuseFeedback("crave", [], "CRANE", [C, P, A, C, P]))
+      .toEqual([C, P, A, A, P])
+    expect(reuseFeedback("", [], "crane", [C, P, A, C, P]))
+      .toEqual(emptyFeedback())
+  })
+  it("does not reuse a yellow when a new duplicate might consume its match", () => {
+    const history = [guess("allee", [C, P, A, A, C])]
+    expect(reuseFeedback("allle", history)).toEqual([C, A, A, A, C])
+    expect(reuseFeedback("alike", history)).toEqual([C, P, A, A, C])
+    expect(reuseFeedback("allle", history, "alike", [C, P, A, A, C]))
+      .toEqual([C, A, A, A, C])
+  })
+  it("does not treat a gray duplicate as a ban on the letter", () => {
+    expect(reuseFeedback("eerie", [guess("speed", [C, A, P, P, A])]))
+      .toEqual(emptyFeedback())
+    expect(reuseFeedback("sleet", [guess("speed", [C, A, P, P, A])]))
+      .toEqual([C, A, P, P, A])
+  })
+  it("leaves conflicting clues and empty history at the default", () => {
+    expect(reuseFeedback("crave", [
+      guess("crane", [C, A, A, A, A]),
+      guess("crone", [P, A, A, A, A]),
+    ])).toEqual(emptyFeedback())
+    expect(reuseFeedback("crave", [])).toEqual(emptyFeedback())
+  })
   it("cycles only the selected letter through all three states without mutation", () => {
     const original = Object.freeze(emptyFeedback())
     const present = cycleFeedback(original, 2)

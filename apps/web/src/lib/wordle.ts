@@ -13,6 +13,49 @@ const NEXT_FEEDBACK: Record<Feedback, Feedback> = {
 export const emptyFeedback = (): Feedback[] =>
   Array<Feedback>(WORD_LENGTH).fill("absent")
 
+/** Reuse positional clues only when duplicate counts cannot change their meaning. */
+export function reuseFeedback(
+  word: string,
+  guesses: readonly Guess[],
+  previousWord = "",
+  previousFeedback: readonly Feedback[] = []
+): Feedback[] {
+  const next = word.toLowerCase()
+  const previous = previousWord.toLowerCase()
+  const count = (value: string, letter: string) =>
+    [...value].filter((item) => item === letter).length
+
+  return emptyFeedback().map((fallback, position) => {
+    const letter = next[position]
+    if (!letter) return fallback
+    // Changing the number of copies can change yellow/gray allocation.
+    if (
+      previous[position] === letter &&
+      previousFeedback[position] &&
+      (previousFeedback[position] === "correct" ||
+        count(previous, letter) === count(next, letter))
+    )
+      return previousFeedback[position]
+
+    const clues = new Set<Feedback>()
+    for (const guess of guesses) {
+      const matches = [...guess.word].filter(
+        (value, index) => value === letter && guess.feedback[index] !== "absent"
+      ).length
+      if (guess.word.includes(letter) && matches === 0) clues.add("absent")
+      if (guess.word[position] !== letter) continue
+      if (guess.feedback[position] === "correct") clues.add("correct")
+      if (
+        guess.feedback[position] === "present" &&
+        count(next, letter) <= matches
+      )
+        clues.add("present")
+    }
+    // Conflicting history is left for the user to resolve.
+    return clues.size === 1 ? [...clues][0] : fallback
+  })
+}
+
 export function cycleFeedback(
   feedback: readonly Feedback[],
   position: number

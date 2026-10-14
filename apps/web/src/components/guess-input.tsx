@@ -69,7 +69,8 @@ export function GuessInput({
         className="mt-2 text-xs leading-relaxed text-muted-foreground"
       >
         Tap tiles or press 1–5 while in this form to cycle: absent → present →
-        correct. Enter submits your guess.
+        correct. Enter submits your guess. Known tags carry over automatically;
+        check every tile against Wordle before saving.
       </p>
       {error && (
         <p
