@@ -121,7 +121,7 @@ export function App() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-8">
           <div className="flex items-center gap-3">
             <img
-              src="/logo.webp"
+              src="/logo.webp?v=2"
               alt=""
               width={56}
               height={56}
