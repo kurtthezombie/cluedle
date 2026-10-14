@@ -8,8 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "typecheck": "tsc -b",
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@workspace/ui": "*",
@@ -30,6 +31,7 @@
     "globals": "^17",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8",
-    "vite": "^8"
+    "vite": "^8",
+    "vitest": "^4.1.11"
   }
 }
