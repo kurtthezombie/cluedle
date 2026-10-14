@@ -6,19 +6,20 @@ const states = {
     label: "Absent or extra occurrence",
     short: "Absent",
     icon: Minus,
-    style: "bg-[#737b86] text-white",
+    style: "bg-[var(--feedback-absent)] text-white",
   },
   present: {
     label: "Present, wrong position",
     short: "Present",
     icon: MoveRight,
-    style: "bg-[#f0c65a] text-[#453714]",
+    style:
+      "bg-[var(--feedback-present)] text-[var(--feedback-present-foreground)]",
   },
   correct: {
     label: "Correct letter and position",
     short: "Correct",
     icon: Check,
-    style: "bg-[#438568] text-white",
+    style: "bg-[var(--feedback-correct)] text-white",
   },
 }
 export function LetterTile({

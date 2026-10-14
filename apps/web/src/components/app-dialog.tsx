@@ -45,7 +45,7 @@ export function AppDialog({
       onCancel={onClose}
       onClose={onClose}
       aria-labelledby="dialog-title"
-      className="fixed inset-0 m-auto max-h-[85svh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-border bg-white p-6 text-foreground shadow-xl backdrop:bg-[#172d24]/35"
+      className="fixed inset-0 m-auto max-h-[85svh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-[#43291d]/35"
     >
       <div className="mb-5 flex items-center justify-between gap-3">
         <h2 id="dialog-title" className="text-xl font-semibold">

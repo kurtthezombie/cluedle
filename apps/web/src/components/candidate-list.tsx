@@ -29,9 +29,9 @@ export function CandidateList({
   return (
     <section
       aria-labelledby="answers-heading"
-      className="min-w-0 rounded-md border border-border bg-white p-4 shadow-sm sm:p-6"
+      className="min-w-0 rounded-md border border-border bg-card p-4 shadow-sm sm:p-6"
     >
-      <div className="answer-panel-heading -mx-4 -mt-4 mb-5 flex min-h-15 items-center justify-between gap-3 rounded-t-md border-b border-border bg-slate-50 px-4 sm:-mx-6 sm:-mt-6 sm:px-6">
+      <div className="answer-panel-heading -mx-4 -mt-4 mb-5 flex min-h-15 items-center justify-between gap-3 rounded-t-md border-b border-border bg-muted px-4 sm:-mx-6 sm:-mt-6 sm:px-6">
         <h2 id="answers-heading" className="text-base font-semibold">
           Possible answers
         </h2>
@@ -39,7 +39,7 @@ export function CandidateList({
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="answer-count rounded border border-slate-200 bg-white px-2 py-0.5 text-xs text-muted-foreground"
+          className="answer-count rounded border border-border bg-card px-2 py-0.5 text-xs text-muted-foreground"
         >
           <strong className="font-medium tabular-nums">
             {candidates.length.toLocaleString()}
@@ -68,7 +68,7 @@ export function CandidateList({
             {candidates.slice(0, limit).map((word) => (
               <li
                 key={word}
-                className={`answer-row flex min-w-0 items-center justify-between border-b border-border ${candidates.length === 1 ? "col-span-2 font-semibold text-[#306a51]" : ""}`}
+                className={`answer-row flex min-w-0 items-center justify-between border-b border-border ${candidates.length === 1 ? "col-span-2 font-semibold text-[var(--success-foreground)]" : ""}`}
               >
                 <span className="font-mono text-sm tracking-wide">
                   {word.toUpperCase()}

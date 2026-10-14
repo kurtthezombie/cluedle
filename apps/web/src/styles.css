@@ -1,18 +1,31 @@
 :root {
   color-scheme: light;
-  --background: #f8fafc;
-  --foreground: #243449;
-  --border: #dce2e8;
-  --input: #cbd1d8;
-  --muted-foreground: #606c7a;
-  --primary: #1e3a5f;
-  --primary-foreground: #fff;
-  --ring: #1e3a5f;
+  --background: #faf5ed;
+  --foreground: #43291d;
+  --card: #fffcf7;
+  --card-foreground: #43291d;
+  --popover: #fffcf7;
+  --popover-foreground: #43291d;
+  --border: #e5d4bf;
+  --input: #c4a98c;
+  --muted: #f3e7d8;
+  --muted-foreground: #78604c;
+  --primary: #884b28;
+  --primary-foreground: #fffaf2;
+  --secondary: #f3e7d8;
+  --secondary-foreground: #59351f;
+  --ring: #884b28;
+  --destructive: #a33425;
   --radius: 0.375rem;
-  --accent: #edf1f6;
-  --accent-foreground: #1e3a5f;
-  --amber-soft: #fff5df;
-  --amber-ink: #854d0e;
+  --accent: #f5e1c5;
+  --accent-foreground: #59351f;
+  --amber-soft: #fbe8c9;
+  --amber-ink: #75451f;
+  --feedback-absent: #756b61;
+  --feedback-present: #e6b754;
+  --feedback-present-foreground: #493015;
+  --feedback-correct: #4c7551;
+  --success-foreground: #365a3b;
 }
 body {
   margin: 0;
@@ -30,7 +43,7 @@ button:not(:disabled) {
   cursor: pointer;
 }
 ::selection {
-  background: #fde7b3;
+  background: #f3d3a4;
 }
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -45,26 +58,26 @@ button:not(:disabled) {
   border-top: 3px solid var(--primary);
 }
 .wordmark {
-  color: #1e3a5f;
+  color: var(--primary);
 }
 .guess-panel-heading {
-  background: #edf1f6;
-  border-bottom-color: #d7dfe9;
-  color: #1e3a5f;
+  background: var(--muted);
+  border-bottom-color: var(--border);
+  color: var(--primary);
 }
 .answer-panel-heading {
   background: var(--amber-soft);
-  border-bottom-color: #efd9ad;
+  border-bottom-color: #e7c99f;
   color: var(--amber-ink);
 }
 .answer-count {
-  border-color: #e8c784;
-  background: #fffbef;
+  border-color: #dbb887;
+  background: var(--card);
   color: var(--amber-ink);
 }
 .answer-row:hover {
-  background: #f2f5f9;
+  background: var(--muted);
 }
 .source-link {
-  color: #1e3a5f;
+  color: var(--primary);
 }

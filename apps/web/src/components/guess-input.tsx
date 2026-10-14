@@ -62,7 +62,7 @@ export function GuessInput({
         spellCheck={false}
         aria-invalid={!!error}
         aria-describedby={error ? "guess-error guess-hint" : "guess-hint"}
-        className="h-11 w-full rounded border border-input bg-white px-3 text-base tracking-[0.14em] outline-none placeholder:text-sm placeholder:tracking-normal focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20"
+        className="h-11 w-full rounded border border-input bg-card px-3 text-base tracking-[0.14em] outline-none placeholder:text-sm placeholder:tracking-normal focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/20"
       />
       <p
         id="guess-hint"
@@ -72,7 +72,11 @@ export function GuessInput({
         correct. Enter submits your guess.
       </p>
       {error && (
-        <p id="guess-error" role="alert" className="mt-2 text-sm text-red-700">
+        <p
+          id="guess-error"
+          role="alert"
+          className="mt-2 text-sm text-destructive"
+        >
           {error}
         </p>
       )}

@@ -117,21 +117,30 @@ export function App() {
 
   return (
     <div className="min-h-svh">
-      <header className="site-header border-b border-border bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <div>
-            <a
-              href="#main"
-              aria-label="Cluedle, skip to workspace"
-              className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              <h1 className="wordmark text-2xl font-bold tracking-tight">
-                cluedle
-              </h1>
-            </a>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              Less guessing, more solving
-            </p>
+      <header className="site-header border-b border-border bg-card">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-8">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.webp"
+              alt=""
+              width={56}
+              height={56}
+              className="size-14 shrink-0 object-contain"
+            />
+            <div>
+              <a
+                href="#main"
+                aria-label="Cluedle, skip to workspace"
+                className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                <h1 className="wordmark text-2xl font-bold tracking-tight">
+                  cluedle
+                </h1>
+              </a>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Less guessing, more solving
+              </p>
+            </div>
           </div>
           <Button
             variant="outline"
@@ -152,9 +161,9 @@ export function App() {
         <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <section
             aria-labelledby="workspace-heading"
-            className="min-w-0 rounded-md border border-border bg-white p-4 shadow-sm sm:p-6"
+            className="min-w-0 rounded-md border border-border bg-card p-4 shadow-sm sm:p-6"
           >
-            <div className="guess-panel-heading -mx-4 -mt-4 mb-5 flex items-center justify-between gap-2 rounded-t-md border-b border-border bg-slate-50 px-4 py-2 sm:-mx-6 sm:-mt-6 sm:px-6">
+            <div className="guess-panel-heading -mx-4 -mt-4 mb-5 flex items-center justify-between gap-2 rounded-t-md border-b border-border bg-muted px-4 py-2 sm:-mx-6 sm:-mt-6 sm:px-6">
               <h2 id="workspace-heading" className="text-base font-semibold">
                 Your guesses
               </h2>
@@ -185,7 +194,7 @@ export function App() {
               </span>
             </div>
             {!guesses.length ? (
-              <p className="rounded border border-dashed border-border bg-slate-50 px-3 py-5 text-center text-sm text-muted-foreground">
+              <p className="rounded border border-dashed border-border bg-muted px-3 py-5 text-center text-sm text-muted-foreground">
                 No guesses added yet.
               </p>
             ) : (
