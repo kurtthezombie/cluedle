@@ -1,10 +1,11 @@
-import { useMemo, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { CircleHelp } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import allowedWords from "./data/guesses.json"
 import { getCandidates } from "./lib/candidates"
 import {
   emptyFeedback,
+  reuseFeedback,
   cycleFeedback,
   hasOnlyLetters,
   isValidGuess,
@@ -16,6 +17,7 @@ import { AppDialog } from "./components/app-dialog"
 import { CandidateList } from "./components/candidate-list"
 import { GuessInput } from "./components/guess-input"
 import { GuessRow } from "./components/guess-row"
+import { Celebration } from "./components/celebration"
 
 const allowed = new Set(allowedWords)
 
@@ -28,6 +30,11 @@ export function App() {
   const [error, setError] = useState<string | null>(null)
   const [dialog, setDialog] = useState<"help" | "reset" | null>(null)
   const [notice, setNotice] = useState("")
+  const [celebration, setCelebration] = useState<{
+    id: string
+    word: string
+  } | null>(null)
+  const endCelebration = useCallback(() => setCelebration(null), [])
   const candidates = useMemo(() => getCandidates(guesses), [guesses])
 
   function clearDraft() {
@@ -41,8 +48,15 @@ export function App() {
       setError(LETTERS_ONLY_ERROR)
       return
     }
+    setFeedback(
+      reuseFeedback(
+        value,
+        guesses.filter((guess) => guess.id !== editingId),
+        word,
+        feedback
+      )
+    )
     setWord(value.toUpperCase())
-    setFeedback(emptyFeedback())
     setError(null)
   }
   function submit() {
@@ -72,6 +86,11 @@ export function App() {
         : [...previous, guess]
     )
     setNotice(`${word} ${editingId ? "updated" : "added"}.`)
+    setCelebration(
+      feedback.every((state) => state === "correct")
+        ? { id: crypto.randomUUID(), word }
+        : null
+    )
     clearDraft()
     wordInputRef.current?.focus()
   }
@@ -83,6 +102,7 @@ export function App() {
     wordInputRef.current?.focus()
   }
   function remove(guess: Guess) {
+    endCelebration()
     setGuesses((previous) => previous.filter((item) => item.id !== guess.id))
     if (editingId === guess.id) clearDraft()
     setNotice(`${guess.word.toUpperCase()} removed.`)
@@ -93,6 +113,15 @@ export function App() {
   }
 
   function cycleGuessFeedback(id: string, position: number) {
+    const updated = guesses.find((guess) => guess.id === id)
+    setCelebration(
+      updated &&
+        cycleFeedback(updated.feedback, position).every(
+          (state) => state === "correct"
+        )
+        ? { id: crypto.randomUUID(), word: updated.word }
+        : null
+    )
     setGuesses((previous) =>
       previous.map((guess) =>
         guess.id === id
@@ -104,6 +133,7 @@ export function App() {
   }
 
   function resetGuesses() {
+    endCelebration()
     setGuesses([])
     clearDraft()
     setNotice("All guesses reset.")
@@ -117,6 +147,13 @@ export function App() {
 
   return (
     <div className="min-h-svh">
+      {celebration && (
+        <Celebration
+          key={celebration.id}
+          word={celebration.word}
+          onDone={endCelebration}
+        />
+      )}
       <header className="site-header border-b border-border bg-card">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-8">
           <div className="flex items-center gap-3">
@@ -279,6 +316,12 @@ export function App() {
                 Wordle, and bring back the new feedback.
               </li>
             </ol>
+            <p>
+              Known tags carry over from saved guesses: green in the same
+              position, yellow in a confirmed yellow position when duplicate
+              counts allow it, and gray for absent letters. New positions still
+              need checking. You can change any tag before saving.
+            </p>
             <p>
               <strong className="text-foreground">
                 Repeated letters matter.

@@ -80,3 +80,49 @@ button:not(:disabled) {
 .source-link {
   color: var(--primary);
 }
+
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  overflow: hidden;
+}
+.celebration-message {
+  position: absolute;
+  top: max(1.5rem, env(safe-area-inset-top));
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--success-foreground);
+  border-radius: 0.75rem;
+  background: var(--card);
+  color: var(--success-foreground);
+  box-shadow: 0 8px 40px #0008;
+  animation: celebration-arrive 450ms ease-out both;
+}
+.celebration-confetti i {
+  position: absolute;
+  top: -1.5rem;
+  width: 0.5rem;
+  height: 0.9rem;
+  border-radius: 2px;
+  animation: celebration-fall 3.2s ease-in both;
+}
+@keyframes celebration-arrive {
+  from { opacity: 0; transform: translate(-50%, -1rem) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+@keyframes celebration-fall {
+  from { transform: translateY(-2rem) rotate(0); opacity: 1; }
+  to { transform: translate(var(--drift), 105vh) rotate(var(--spin)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .celebration-message { animation: none; }
+  .celebration-confetti { display: none; }
+}
